@@ -9,6 +9,7 @@ namespace GMCloud\GMCoin\Client;
 
 use Exception;
 use GuzzleHttp\Client as HttpClient;
+use GuzzleHttp\RequestOptions;
 
 class Client
 {
@@ -22,8 +23,15 @@ class Client
     public static $header = [];
     public static $timeout = 1;
 
+    protected static $accessKey;
+    protected static $secretKey;
+
     public static function instance()
     {
+        if (empty(static::$accessKey) || empty(static::$secretKey)) {
+            throw new Exception('lost access key or secret key');
+        }
+
         if (empty(static::$apiUri)) {
             throw new Exception('lost api url');
         }
@@ -38,6 +46,21 @@ class Client
             'timeout'  => static::$timeout,
             'headers'  => $headers
         ]);
+    }
+
+    public static function setAccessKey($accessKey)
+    {
+        return static::$accessKey = $accessKey;
+    }
+
+    public static function setSecretKey($secretKey)
+    {
+        return static::$secretKey = $secretKey;
+    }
+
+    protected static function signature($uri, $method, $params)
+    {
+        return hash_hmac('sha256', implode('|', [$method, $uri, http_build_query($params)]), static::$secretKey);
     }
 
     public static function get($uri, $params = [])
@@ -65,7 +88,14 @@ class Client
         $client = static::instance();
 
         try {
-            $response = $client->request($method, $uri, $params);
+            $params += [
+                'access_key' => static::$accessKey,
+                'tonce'      => round(microtime(true) * 1000)
+            ];
+
+            $params['signature'] = static::signature($uri, $method, $params);
+
+            $response = $client->request($method, $uri, [RequestOptions::QUERY => $params]);
             $data = $response->getBody()->getContents();
 
             return json_decode($data, true);

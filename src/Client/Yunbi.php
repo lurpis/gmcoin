@@ -8,39 +8,45 @@
 namespace GMCloud\GMCoin\Client;
 
 use Exception;
+use GMCloud\GMCoin\App;
 
 class Yunbi extends Client
 {
-    public static $apiUri = 'https://yunbi.com/api/v2';
-
-    public static $accessKey;
-    public static $secretKey;
-
-    public static function instance()
-    {
-//        if(empty(static::$accessKey) || empty(static::$secretKey)) {
-//            throw new Exception('need access key and secret key');
-//        }
-
-        return parent::instance();
-    }
+    public static $apiUri = 'https://yunbi.com';
 
     public static function markets()
     {
-        $uri = '/markets.json';
+        $uri = '/api/v2/markets.json';
 
         return self::get($uri);
     }
 
     public static function deposits()
     {
-        $uri = '/deposits.json';
+        $uri = '/api/v2/deposits.json';
 
         return self::get($uri);
     }
 
-    public static function signature()
+    public static function depth($params)
     {
+        $uri = '/api/v2/depth.json';
 
+        return self::get($uri, $params);
+    }
+
+    public static function orders()
+    {
+        $uri = '/api/v2/orders.json';
+
+        $params = [
+            'market' => '1stcny',
+            'side'  => 'buy',
+            'volume'    => '0.01',
+            'price'     => '0.05',
+            'ord_type'  => 'test'
+        ];
+
+        return self::post($uri, $params);
     }
 }

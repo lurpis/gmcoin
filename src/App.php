@@ -7,8 +7,10 @@
 
 namespace GMCloud\GMCoin;
 
+use GMCloud\GMCoin\Client\Yunbi;
 use GMCloud\GMCoin\Command\AccountCommand;
 use GMCloud\GMCoin\Command\ConfigCommand;
+use GMCloud\GMCoin\Command\DepthCommand;
 use GMCloud\GMCoin\Command\MarketCommand;
 use Symfony\Component\Console\Application;
 use Symfony\Component\Console\ConsoleEvents;
@@ -28,12 +30,14 @@ class App
     public static $command = [
         AccountCommand::class,
         MarketCommand::class,
+        DepthCommand::class,
         ConfigCommand::class
     ];
 
     public static $keyCommand = [
         AccountCommand::class,
-        MarketCommand::class
+        MarketCommand::class,
+        DepthCommand::class
     ];
 
     public static $secretPath = __DIR__ . '/.secret';
@@ -78,10 +82,13 @@ class App
         $this->console->setDispatcher($dispatcher);
     }
 
-    public function setKey()
+    public function initialize()
     {
         static::$accessKey = static::getKeySecretFile(static::ACCESS_KEY);
         static::$secretKey = static::getKeySecretFile(static::SECRET_KEY);
+
+        Yunbi::setAccessKey(static::$accessKey);
+        Yunbi::setSecretKey(static::$secretKey);
     }
 
     public static function getKeySecretFile($key)
@@ -116,7 +123,7 @@ class App
 
         $this->addCommand();
         $this->addEvent();
-        $this->setKey();
+        $this->initialize();
 
         $this->console->run();
     }

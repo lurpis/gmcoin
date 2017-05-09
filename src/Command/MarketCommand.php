@@ -7,7 +7,6 @@
 
 namespace GMCloud\GMCoin\Command;
 
-use GMCloud\GMCoin\App;
 use GMCloud\GMCoin\Client\Yunbi;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -23,8 +22,6 @@ class MarketCommand extends BaseCommand
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        print_r(App::$accessKey);
-
-//        print_r(Yunbi::markets());
+        print_r(Yunbi::markets());
     }
 }
