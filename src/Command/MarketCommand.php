@@ -7,7 +7,7 @@
 
 namespace GMCloud\GMCoin\Command;
 
-use GMCloud\GMCoin\Client\Yunbi;
+use GMCloud\SDK\Yunbi;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 

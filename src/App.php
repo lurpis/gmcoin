@@ -7,7 +7,7 @@
 
 namespace GMCloud\GMCoin;
 
-use GMCloud\GMCoin\Client\Yunbi;
+use GMCloud\SDK\Yunbi;
 use GMCloud\GMCoin\Command\AccountCommand;
 use GMCloud\GMCoin\Command\ConfigCommand;
 use GMCloud\GMCoin\Command\DepthCommand;
