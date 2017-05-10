@@ -14,30 +14,37 @@ class Yunbi extends Client
 {
     public static $apiUri = 'https://yunbi.com';
 
+    public static function account()
+    {
+        $uri = '/api/v2/members/me';
+
+        return self::get($uri);
+    }
+
     public static function markets()
     {
-        $uri = '/api/v2/markets.json';
+        $uri = '/api/v2/markets';
 
         return self::get($uri);
     }
 
     public static function deposits()
     {
-        $uri = '/api/v2/deposits.json';
+        $uri = '/api/v2/deposits';
 
         return self::get($uri);
     }
 
     public static function depth($params)
     {
-        $uri = '/api/v2/depth.json';
+        $uri = '/api/v2/depth';
 
         return self::get($uri, $params);
     }
 
     public static function orders()
     {
-        $uri = '/api/v2/orders.json';
+        $uri = '/api/v2/orders';
 
         $params = [
             'market' => '1stcny',

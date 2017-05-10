@@ -15,6 +15,10 @@ use Symfony\Component\Console\Output\OutputInterface;
 class AccountCommand extends BaseCommand
 {
     public static $name = 'account';
+    public static $status = [
+        0   => '冻结',
+        1   => '正常'
+    ];
 
     protected function configure()
     {
@@ -23,6 +27,23 @@ class AccountCommand extends BaseCommand
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        print_r(Yunbi::deposits());
+        $account = Yunbi::account();
+
+        static::header($output);
+        $output->writeln('<info>账号: </info>' . $account['email']);
+        $output->writeln('<info>状态: </info>' . static::$status[$account['activated']]);
+        $output->writeln('<info>ID: </info>' . $account['memo']);
+
+        $table = new Table($output);
+
+        $header = [];
+        foreach($account['accounts'] as $item) {
+            $header = array_keys($item);
+            $table->addRow(array_values($item));
+        }
+
+        $table->setHeaders($header);
+
+        $table->render();
     }
 }

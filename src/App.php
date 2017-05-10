@@ -29,15 +29,15 @@ class App
 
     public static $command = [
         AccountCommand::class,
-        MarketCommand::class,
-        DepthCommand::class,
+//        MarketCommand::class,
+//        DepthCommand::class,
         ConfigCommand::class
     ];
 
     public static $keyCommand = [
         AccountCommand::class,
-        MarketCommand::class,
-        DepthCommand::class
+//        MarketCommand::class,
+//        DepthCommand::class
     ];
 
     public static $secretPath = __DIR__ . '/.secret';
@@ -84,11 +84,23 @@ class App
 
     public function initialize()
     {
+        static::initSecretFile();
+
         static::$accessKey = static::getKeySecretFile(static::ACCESS_KEY);
         static::$secretKey = static::getKeySecretFile(static::SECRET_KEY);
 
         Yunbi::setAccessKey(static::$accessKey);
         Yunbi::setSecretKey(static::$secretKey);
+    }
+
+    public static function initSecretFile()
+    {
+        if (!file_exists(static::$secretPath)) {
+            $secretFile = static::ACCESS_KEY . '=' . PHP_EOL . static::SECRET_KEY . '=';
+            if (!file_put_contents(static::$secretPath, $secretFile)) {
+                throw new RuntimeException('Can not create secret file:' . static::$secretPath);
+            }
+        }
     }
 
     public static function getKeySecretFile($key)
@@ -116,6 +128,7 @@ class App
 
         return "/^{$key}={$escaped}/m";
     }
+
 
     public function run()
     {

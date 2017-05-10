@@ -60,6 +60,8 @@ class Client
 
     protected static function signature($uri, $method, $params)
     {
+        ksort($params);
+
         return hash_hmac('sha256', implode('|', [$method, $uri, http_build_query($params)]), static::$secretKey);
     }
 
@@ -95,14 +97,12 @@ class Client
 
             $params['signature'] = static::signature($uri, $method, $params);
 
-            $response = $client->request($method, $uri, [RequestOptions::QUERY => $params]);
+            $response = $client->request($method, $uri, [RequestOptions::FORM_PARAMS => $params]);
             $data = $response->getBody()->getContents();
 
             return json_decode($data, true);
         } catch (Exception $exception) {
-            print_r($exception->getMessage());
-
-            return false;
+            throw $exception;
         }
     }
 }
