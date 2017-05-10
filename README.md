@@ -34,12 +34,12 @@ composer require lurrpis/gmcoin
 
 配置 AccessKey & SecretKey
 ```php
-php bin/gmcoin config
+php vendor/bin/gmcoin config
 ```
 
 获取账户余额
 ```php
-php bin/gmcoin account
+php vendor/bin/gmcoin account
 ```
 
 ```
@@ -79,7 +79,7 @@ ID: 76468220
 
 获取帮助
 ```php
-php bin/gmcoin help
+php vendor/bin/gmcoin help
 ```
 
 ## Documentation
