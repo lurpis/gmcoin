@@ -1,6 +1,7 @@
 {
     "name": "lurrpis/gmcoin",
     "description": "Buy or sell in console at yunbi.com",
+    "keywords": ["yunbi", "bitcoin", "console"],
     "type": "library",
     "homepage": "https://lurrpis.com",
     "license": "MIT",
@@ -17,6 +18,7 @@
         "symfony/event-dispatcher": "3.2.8",
         "guzzlehttp/guzzle": "6.2.3"
     },
+    "bin": ["bin/gmcoin"],
     "autoload": {
         "psr-4": {
             "GMCloud\\GMCoin\\": "src/"
