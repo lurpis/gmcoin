@@ -25,7 +25,7 @@ GMCoin
 ## Installation
 
 ```shell
-composer require "lurrpis/gmcoin:~0.0.1" -vvv
+composer require lurrpis/gmcoin
 ```
 
 ## Usage
