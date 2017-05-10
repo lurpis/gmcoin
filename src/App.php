@@ -23,7 +23,7 @@ use RuntimeException;
 class App
 {
     const APP = 'GMCoin';
-    const VERSION = '0.0.1';
+    const VERSION = '0.0.3';
     const ACCESS_KEY = 'ACCESS_KEY';
     const SECRET_KEY = 'SECRET_KEY';
 
@@ -82,7 +82,7 @@ class App
         $this->console->setDispatcher($dispatcher);
     }
 
-    public function initialize()
+    public static function initialize()
     {
         static::initSecretFile();
 

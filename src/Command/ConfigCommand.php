@@ -63,7 +63,7 @@ class ConfigCommand extends BaseCommand
 
         $accessKey = $helper->ask($input, $output, $accessQuestion);
         if (App::setKeySecretFile(App::ACCESS_KEY, $accessKey)) {
-            App::$accessKey = $accessKey;
+            App::initialize();
             $output->writeln(sprintf('<info>Set AccessKey successfully!</info>'));
         }
 
@@ -82,7 +82,7 @@ class ConfigCommand extends BaseCommand
 
         $secretKey = $helper->ask($input, $output, $secretQuestion);
         if (App::setKeySecretFile(App::SECRET_KEY, $secretKey)) {
-            App::$secretKey = $secretKey;
+            App::initialize();
             $output->writeln(sprintf('<info>Set SecretKey successfully!</info>'));
         }
     }
