@@ -8,6 +8,7 @@
 namespace GMCloud\GMCoin;
 
 use GMCloud\SDK\Yunbi;
+use GMCloud\GMCoin\Command\NowCommand;
 use GMCloud\GMCoin\Command\AccountCommand;
 use GMCloud\GMCoin\Command\ConfigCommand;
 use GMCloud\GMCoin\Command\DepthCommand;
@@ -31,13 +32,15 @@ class App
         AccountCommand::class,
 //        MarketCommand::class,
 //        DepthCommand::class,
+        NowCommand::class,
         ConfigCommand::class
     ];
 
     public static $keyCommand = [
         AccountCommand::class,
 //        MarketCommand::class,
-//        DepthCommand::class
+//        DepthCommand::class,
+        NowCommand::class
     ];
 
     public static $secretPath = __DIR__ . '/.secret';

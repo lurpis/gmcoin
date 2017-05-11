@@ -25,10 +25,6 @@ class DepthCommand extends BaseCommand
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $params = [
-            'market' => $input->getArgument('market')
-        ];
-
-        print_r(Yunbi::depth($params));
+        print_r(Yunbi::depth($input->getArgument('market')));
     }
 }
