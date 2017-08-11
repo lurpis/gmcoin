@@ -19,7 +19,7 @@ class DepthCommand extends BaseCommand
     protected function configure()
     {
         $this->setName(static::$name)
-            ->addArgument('market', InputArgument::OPTIONAL, 'Select a market. Default is 1ST', '1stcny')
+            ->addArgument('market', InputArgument::OPTIONAL, 'Select a market. Default is ' . self::$defaultCoin, self::$defaultCoin)
             ->setDescription('Markets depth');
     }
 

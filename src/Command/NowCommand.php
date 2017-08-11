@@ -20,23 +20,31 @@ class NowCommand extends BaseCommand
     protected function configure()
     {
         $this->setName(static::$name)
-            ->addArgument('market', InputArgument::OPTIONAL, 'Select a market. Default is 1ST', '1stcny')
+            ->addArgument('market', InputArgument::OPTIONAL, 'Select a market. Default is ' . self::$defaultCoin, self::$defaultCoin)
             ->setDescription('Markets now the price');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $line = Yunbi::tickers($input->getArgument('market'));
+        $market = static::getMarket($input->getArgument('market'));
+
+        $line = Yunbi::tickers($market);
 
         $table = new Table($output);
 
-        $header = array_keys($line['ticker']);
-        array_unshift($header, 'market');
-        array_unshift($header, 'time');
+        $header = ['币种', '买单', '卖单', '最低', '最高', '价格', '成交量', '时间'];
 
-        $row = array_values($line['ticker']);
-        array_unshift($row, $input->getArgument('market'));
-        array_unshift($row, date('Y-m-d H:i:s', $line['at']));
+        $ticker = $line['ticker'];
+        $row = [
+            static::getCoin($market),
+            $ticker['buy'],
+            $ticker['sell'],
+            $ticker['low'],
+            $ticker['high'],
+            $ticker['last'],
+            number_format($ticker['vol'] / 1000, 1) . 'k',
+            date('Y-m-d H:i:s', $line['at']),
+        ];
 
         $table->setHeaders($header);
         $table->addRow($row);
