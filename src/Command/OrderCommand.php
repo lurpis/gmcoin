@@ -30,7 +30,7 @@ class OrderCommand extends BaseCommand
     {
         $market = static::getMarket($input->getArgument('market'));
 
-        $header = ['单号', '交易', '单价', '余量', '总量', '总价', '状态', '成交数', '币种', '时间'];
+        $header = ['单号', '交易', '单价', '余量', '总量', '成交', '总价', '状态', '成交数', '币种', '时间'];
 
         if ($input->getOption('id')) {
             $order = Yunbi::order($input->getOption('id'));
@@ -81,7 +81,8 @@ class OrderCommand extends BaseCommand
             $order['price'],
             $order['remaining_volume'],
             $order['volume'],
-            $order['avg_price'],
+            $order['price'] * ($order['volume'] - $order['remaining_volume']),
+            $order['price'] * $order['volume'],
             $order['state'],
             $order['trades_count'],
             static::getCoin($order['market']),

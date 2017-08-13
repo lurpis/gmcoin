@@ -36,12 +36,14 @@ class CancelCommand extends BaseCommand
 
             if (!empty($cancel)) {
                 $message = [
-                    '取消挂单成功' => static::getCoin($cancel['market']),
-                    '取消挂单数'  => 1,
-                    '单号'     => $cancel['id'],
-                    '总价'     => $cancel['avg_price'],
-                    '数量'     => $cancel['remaining_volume'],
-                    '时间'     => date('Y-m-d H:i:s', strtotime($cancel['created_at']))
+                    '取消挂单成功'  => static::getCoin($cancel['market']),
+                    '取消挂单数'   => 1,
+                    '单号'      => $cancel['id'],
+                    '挂单总价'    => $cancel['price'] * $cancel['volume'],
+                    '取消挂单总价' => $cancel['price'] * $cancel['remaining_volume'],
+                    '总量'      => $cancel['volume'],
+                    '数量'      => $cancel['remaining_volume'],
+                    '时间'      => date('Y-m-d H:i:s', strtotime($cancel['created_at']))
                 ];
 
                 static::display($output, $message);
@@ -56,17 +58,23 @@ class CancelCommand extends BaseCommand
             }
 
             $side == 'all' && $side = '';
+            $cancels = Yunbi::clearOrders($side);
 
-            $cancel = Yunbi::clearOrders($side);
+            if (!empty($cancels)) {
+                $price = 0;
+                $remaining = 0;
+                $id = [];
+                foreach ($cancels as $cancel) {
+                    $price += $cancel['price'] * $cancel['volume'];
+                    $remaining += $cancel['price'] * $cancel['remaining_volume'];
+                    array_push($id, $cancel['id']);
+                }
 
-
-            print_r($cancel);
-            exit;
-
-            if (!empty($cancel)) {
                 $message = [
-                    '成功取消挂单数' => count($cancel),
-                    '取消挂单总额'  => date('Y-m-d H:i:s', strtotime($cancel['created_at']))
+                    '成功取消挂单数' => count($cancels),
+                    '取消单号'    => implode(', ', $id),
+                    '挂单总价'    => $price,
+                    '取消挂单总价' => $remaining,
                 ];
 
                 static::display($output, $message);
