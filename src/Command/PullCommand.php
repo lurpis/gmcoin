@@ -73,7 +73,7 @@ class PullCommand extends BaseCommand
             " 挂单数量: " . count($orders) . " 单",
             " 挂单总价: $totalPrice 元",
             " 代币总数: $totalCoin 个",
-            ' 已确认参数填写无误, 开始挂单砸盘?'
+            ' 已确认参数填写无误, 开始挂单拉盘?'
         ];
 
         $confirm = $io->confirm(implode("\n", $message), true);
@@ -101,7 +101,7 @@ class PullCommand extends BaseCommand
 
                 static::display($output, $message);
             } else {
-                $output->writeln("$token <error>砸盘挂单失败, 请重试!</error>");
+                $output->writeln("$token <error>拉盘挂单失败, 请重试!</error>");
             }
         }
     }
