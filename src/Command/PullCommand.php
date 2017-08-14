@@ -1,7 +1,7 @@
 <?php
 /**
  * Create by lurrpis
- * Date 12/08/2017 10:24 PM
+ * Date 14/08/2017 6:39 PM
  * Blog lurrpis.com
  */
 
@@ -41,16 +41,21 @@ class PullCommand extends BaseCommand
         $much = $input->getOption('much');
 
         $order = [
-            'side'   => 'buy',
+            'side'   => 'sell',
             'volume' => $coin,
             'price'  => $start
         ];
 
         $orders = [$order];
         for ($i = 1; $i < $much; $i ++) {
-            $order['price'] += $price;
+            if ($order['price'] > $price) {
+                $order['price'] += $price;
 
-            array_push($orders, $order);
+                array_push($orders, $order);
+            } else {
+                $output->writeln("$token <info>挂单金额超出部分已忽略</info>");
+                break;
+            }
         }
 
         $totalPrice = 0;
@@ -68,7 +73,7 @@ class PullCommand extends BaseCommand
             " 挂单数量: " . count($orders) . " 单",
             " 挂单总价: $totalPrice 元",
             " 代币总数: $totalCoin 个",
-            ' 已确认参数填写无误, 开始挂单拉盘?'
+            ' 已确认参数填写无误, 开始挂单砸盘?'
         ];
 
         $confirm = $io->confirm(implode("\n", $message), true);
@@ -96,7 +101,7 @@ class PullCommand extends BaseCommand
 
                 static::display($output, $message);
             } else {
-                $output->writeln("$token <error>拉盘挂单失败, 请重试!</error>");
+                $output->writeln("$token <error>砸盘挂单失败, 请重试!</error>");
             }
         }
     }

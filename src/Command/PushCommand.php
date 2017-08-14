@@ -1,7 +1,7 @@
 <?php
 /**
  * Create by lurrpis
- * Date 14/08/2017 6:39 PM
+ * Date 12/08/2017 10:24 PM
  * Blog lurrpis.com
  */
 
@@ -23,7 +23,7 @@ class PushCommand extends BaseCommand
         $this->setName(static::$name)
             ->addArgument('market', InputArgument::OPTIONAL, "Select a market. Default is " . self::$defaultCoin,
                 self::$defaultCoin)->addOption('start', 's', InputOption::VALUE_REQUIRED, '开始价格', null)
-            ->addOption('price', 'p', InputOption::VALUE_REQUIRED, '每单递减价格', null)
+            ->addOption('price', 'p', InputOption::VALUE_REQUIRED, '每单递增价格', null)
             ->addOption('coin', 'c', InputOption::VALUE_REQUIRED, '每单代币数', null)
             ->addOption('much', 'm', InputOption::VALUE_REQUIRED, '数量', null)->setDescription('Push coin');
     }
@@ -41,21 +41,16 @@ class PushCommand extends BaseCommand
         $much = $input->getOption('much');
 
         $order = [
-            'side'   => 'sell',
+            'side'   => 'buy',
             'volume' => $coin,
             'price'  => $start
         ];
 
         $orders = [$order];
         for ($i = 1; $i < $much; $i ++) {
-            if ($order['price'] > $price) {
-                $order['price'] -= $price;
+            $order['price'] += $price;
 
-                array_push($orders, $order);
-            } else {
-                $output->writeln("$token <info>挂单金额超出部分已忽略</info>");
-                break;
-            }
+            array_push($orders, $order);
         }
 
         $totalPrice = 0;
@@ -68,12 +63,12 @@ class PushCommand extends BaseCommand
         $message = [
             "币种: $token",
             " 开始价格: $start 元",
-            " 每单递减价格: $price 元",
+            " 每单递增价格: $price 元",
             " 每单代币数: $coin 个",
             " 挂单数量: " . count($orders) . " 单",
             " 挂单总价: $totalPrice 元",
             " 代币总数: $totalCoin 个",
-            ' 已确认参数填写无误, 开始挂单砸盘?'
+            ' 已确认参数填写无误, 开始挂砸盘?'
         ];
 
         $confirm = $io->confirm(implode("\n", $message), true);
