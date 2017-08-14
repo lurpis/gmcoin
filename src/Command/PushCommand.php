@@ -1,7 +1,7 @@
 <?php
 /**
  * Create by lurrpis
- * Date 12/08/2017 10:24 PM
+ * Date 14/08/2017 6:39 PM
  * Blog lurrpis.com
  */
 
@@ -14,18 +14,18 @@ use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 
-class PullCommand extends BaseCommand
+class PushCommand extends BaseCommand
 {
-    public static $name = 'pull';
+    public static $name = 'push';
 
     protected function configure()
     {
         $this->setName(static::$name)
             ->addArgument('market', InputArgument::OPTIONAL, "Select a market. Default is " . self::$defaultCoin,
                 self::$defaultCoin)->addOption('start', 's', InputOption::VALUE_REQUIRED, '开始价格', null)
-            ->addOption('price', 'p', InputOption::VALUE_REQUIRED, '每单递增价格', null)
+            ->addOption('price', 'p', InputOption::VALUE_REQUIRED, '每单递减价格', null)
             ->addOption('coin', 'c', InputOption::VALUE_REQUIRED, '每单代币数', null)
-            ->addOption('much', 'm', InputOption::VALUE_REQUIRED, '数量', null)->setDescription('Pull coin');
+            ->addOption('much', 'm', InputOption::VALUE_REQUIRED, '数量', null)->setDescription('Push coin');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
@@ -41,16 +41,21 @@ class PullCommand extends BaseCommand
         $much = $input->getOption('much');
 
         $order = [
-            'side'   => 'buy',
+            'side'   => 'sell',
             'volume' => $coin,
             'price'  => $start
         ];
 
         $orders = [$order];
         for ($i = 1; $i < $much; $i ++) {
-            $order['price'] += $price;
+            if ($order['price'] > $price) {
+                $order['price'] -= $price;
 
-            array_push($orders, $order);
+                array_push($orders, $order);
+            } else {
+                $output->writeln("$token <info>挂单金额超出部分已忽略</info>");
+                break;
+            }
         }
 
         $totalPrice = 0;
@@ -63,32 +68,32 @@ class PullCommand extends BaseCommand
         $message = [
             "币种: $token",
             " 开始价格: $start 元",
-            " 每单递增价格: $price 元",
+            " 每单递减价格: $price 元",
             " 每单代币数: $coin 个",
             " 挂单数量: " . count($orders) . " 单",
             " 挂单总价: $totalPrice 元",
             " 代币总数: $totalCoin 个",
-            ' 已确认参数填写无误, 开始挂单拉盘?'
+            ' 已确认参数填写无误, 开始挂单砸盘?'
         ];
 
         $confirm = $io->confirm(implode("\n", $message), true);
 
         if ($confirm) {
-            $pull = Yunbi::createOrderMulti($market, $orders);
+            $push = Yunbi::createOrderMulti($market, $orders);
 
             static::header($output);
-            if (!empty($pull)) {
+            if (!empty($push)) {
                 $id = [];
                 $totalPrice = 0;
                 $totalCoin = 0;
-                foreach ($pull as $item) {
+                foreach ($push as $item) {
                     array_push($id, $item['id']);
                     $totalPrice += $item['price'] * $item['volume'];
                     $totalCoin += $item['volume'];
                 }
 
                 $message = [
-                    '成功挂单数' => count($pull),
+                    '成功挂单数' => count($push),
                     '单号'    => implode(', ', $id),
                     '挂单总价'  => $totalPrice,
                     '代币总数'  => $totalCoin,
@@ -96,7 +101,7 @@ class PullCommand extends BaseCommand
 
                 static::display($output, $message);
             } else {
-                $output->writeln("$token <error>拉盘挂单失败, 请重试!</error>");
+                $output->writeln("$token <error>砸盘挂单失败, 请重试!</error>");
             }
         }
     }

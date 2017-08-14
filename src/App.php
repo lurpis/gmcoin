@@ -11,6 +11,7 @@ use GMCloud\GMCoin\Command\BuyCommand;
 use GMCloud\GMCoin\Command\CancelCommand;
 use GMCloud\GMCoin\Command\OrderCommand;
 use GMCloud\GMCoin\Command\PullCommand;
+use GMCloud\GMCoin\Command\PushCommand;
 use GMCloud\GMCoin\Command\SellCommand;
 use GMCloud\SDK\Yunbi;
 use GMCloud\GMCoin\Command\NowCommand;
@@ -41,6 +42,7 @@ class App
         SellCommand::class,
         CancelCommand::class,
         PullCommand::class,
+        PushCommand::class,
         ConfigCommand::class,
 
         //        MarketCommand::class,
@@ -55,7 +57,8 @@ class App
         BuyCommand::class,
         SellCommand::class,
         CancelCommand::class,
-        PullCommand::class
+        PullCommand::class,
+        PushCommand::class
 
         //        MarketCommand::class,
         //        DepthCommand::class,
