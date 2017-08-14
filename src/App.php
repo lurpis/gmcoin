@@ -43,10 +43,7 @@ class App
         CancelCommand::class,
         PullCommand::class,
         PushCommand::class,
-        ConfigCommand::class,
-
-        //        MarketCommand::class,
-        //        DepthCommand::class,
+        ConfigCommand::class
     ];
 
     // 是否需要密钥
@@ -59,9 +56,6 @@ class App
         CancelCommand::class,
         PullCommand::class,
         PushCommand::class
-
-        //        MarketCommand::class,
-        //        DepthCommand::class,
     ];
 
     public static $secretPath = __DIR__ . '/.secret';
