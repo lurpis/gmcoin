@@ -42,7 +42,7 @@ class NowCommand extends BaseCommand
             $ticker['low'],
             $ticker['high'],
             $ticker['last'],
-            number_format($ticker['vol'] / 1000, 1) . 'k',
+            number_format(($ticker['vol'] * $ticker['last']) / 1000, 1) . 'k',
             date('Y-m-d H:i:s', $line['at']),
         ];
 

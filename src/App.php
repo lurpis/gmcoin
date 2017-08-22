@@ -30,7 +30,7 @@ use RuntimeException;
 class App
 {
     const APP = 'GMCoin';
-    const VERSION = '1.0.1';
+    const VERSION = '1.0.2';
     const ACCESS_KEY = 'ACCESS_KEY';
     const SECRET_KEY = 'SECRET_KEY';
 
